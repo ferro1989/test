@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Calculadora estilo Windows</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background: #e0e0e0;
+            }
+
+            .calculator {
+                width: 320px;
+                padding: 15px;
+                background: #f5f5f5;
+                border: 2px solid #999;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .calculator__display {
+                width: 100%;
+                height: 50px;
+                background: #fff;
+                border: 2px solid #999;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                text-align: right;
+                font-size: 1.8rem;
+                padding: 5px 10px;
+                line-height: 50px;
+                /* overflow-x: auto; */
+            }
+
+            .calculator__keys {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+
+            .calculator__button {
+                padding: 15px;
+                font-size: 1rem;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                background: #e0e0e0;
+                transition: 0.15s;
+            }
+
+            .calculator__button:hover {
+                background: #d0d0d0;
+            }
+
+            /* Modificadores */
+            .calculator__button--operator {
+                background: #ff9500;
+                color: #fff;
+                font-weight: bold;
+            }
+
+            .calculator__button--memory {
+                background: #ccc;
+            }
+
+            .calculator__button--wide {
+                grid-column: span 2;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calculator">
+            <div class="calculator__display">0</div>
+
+            <div class="calculator__keys">
+                <!-- Primera fila -->
+                <button class="calculator__button">C</button>
+                <button class="calculator__button">AC</button>
+                <button class="calculator__button">&larr;</button>
+                <button class="calculator__button calculator__button--memory">MS</button>
+                <button class="calculator__button calculator__button--memory">MR</button>
+
+                <!-- Segunda fila -->
+                <button class="calculator__button">()</button>
+                <button class="calculator__button">7</button>
+                <button class="calculator__button">8</button>
+                <button class="calculator__button">9</button>
+                <button class="calculator__button calculator__button--operator">/</button>
+
+                <!-- Tercera fila -->
+                <button class="calculator__button">4</button>
+                <button class="calculator__button">5</button>
+                <button class="calculator__button">6</button>
+                <button class="calculator__button calculator__button--operator">*</button>
+                <button class="calculator__button calculator__button--memory">M+</button>
+
+                <!-- Cuarta fila -->
+                <button class="calculator__button">1</button>
+                <button class="calculator__button">2</button>
+                <button class="calculator__button">3</button>
+                <button class="calculator__button calculator__button--operator">-</button>
+                <button class="calculator__button">sqrt</button>
+
+                <!-- Quinta fila -->
+                <button class="calculator__button calculator__button--wide">0</button>
+                <button class="calculator__button">.</button>
+                <button class="calculator__button calculator__button--operator">+</button>
+                <button class="calculator__button calculator__button--operator">=</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        //+ Logica Negocio
+        class Calculadora {
+            constructor() {
+                this.numeroActual = ""; // el número que se va escribiendo
+                this.numeroAnterior = ""; // para operaciones
+                this.operador = null;
+            }
+            agregarDigito(digito) {
+                // concatenar el dígito al número actual
+                this.numeroActual += digito;
+            }
+
+            // método para reiniciar pantalla o limpiar
+            limpiar() {
+                this.numeroActual = "";
+                this.numeroAnterior = "";
+                this.operador = null;
+            }
+
+            //Metodos privados
+            #sumar(n1, n2) {
+                return n1 + n2;
+            }
+            #restar(n1, n2) {
+                return n1 - n2;
+            }
+            #multiplicar(n1, n2) {
+                return n1 * n2;
+            }
+            #dividir(n1, n2) {
+                if (n2 === 0) {
+                    throw new Error("No se puede dividir entre 0");
+                }
+                return n1 / n2;
+            }
+            #raizCuadrada(n) {
+                return Math.sqrt(n);
+            }
+
+            //Metodo publico
+            operar(n1, n2, operacion) {
+                switch (operacion) {
+                    case "sumar":
+                        return this.#sumar(n1, n2);
+                    case "restar":
+                        return this.#restar(n1, n2);
+                    case "dividir":
+                        return this.#dividir(n1, n2);
+                    case "multiplicar":
+                        return this.#multiplicar(n1, n2);
+                    case "raizCuadrada":
+                        return this.#raizCuadrada(n1, n2);
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        //+ Logica Interfaz
+        class InterfazUsuario {
+            constructor() {
+                this.display = document.querySelector(".calculator__display");
+                this.botones = document.querySelectorAll(".calculator__button");
+                Object.preventExtensions(this);
+            }
+
+            // mostarDatos() {
+            //     // this.botones.forEach((btn) => {
+            //     //     btn.addEventListener("click", () => {
+            //     //         console.log(btn);
+            //     //     });
+            //     // });
+            //     return {
+            //         display: this.display,
+            //         botones: this.botones,
+            //     };
+            // }
+            mostrarDisplay(valor) {
+                this.display.textContent = valor || "0"; //Se muestra el "valor" en caso de ser null se muestra "0"
+            }
+        }
+
+        //+ Controladora
+        class Controlador {
+            constructor() {
+                this.calculadora = new Calculadora();
+                this.uI = new InterfazUsuario();
+
+                this.inicializarEventos();
+            }
+
+            //Metodos
+            inicializarEventos() {
+                this.uI.botones.forEach((boton) => {
+                    boton.addEventListener("click", (evento) => {
+                        const valor = evento.target.textContent;
+                        console.log(valor);
+
+                        // Si es número
+                        if (!isNaN(valor)) {
+                            this.calculadora.agregarDigito(valor); // actualizar estado
+                            this.uI.mostrarDisplay(this.calculadora.numeroActual); // actualizar pantalla
+                        }
+
+                        // Aquí luego se agregarían operadores, igual, limpiar, etc.
+                    });
+                });
+            }
+        }
+        const app = new Controlador();
+    </script>
+</html>
