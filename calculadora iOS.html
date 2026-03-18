@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>iOS Calculator Layout - White Background</title>
+
+        <style>
+            /* RESET */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            }
+
+            /* PAGE */
+            .page {
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f0f0f0; /* gris claro para contraste */
+            }
+
+            /* BLOCK - CALCULATOR */
+            .calculator {
+                height: 570px;
+                width: 340px;
+                padding: 20px;
+                border-radius: 20px;
+                background: #ffffff; /* fondo blanco */
+                border: 2px solid #ffffff; /* borde blanco */
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            }
+
+            /* DISPLAY */
+            .calculator__display {
+                height: 120px;
+                color: #000000; /* texto negro */
+                font-size: 3.5rem;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-end;
+                padding: 10px;
+                margin-bottom: 10px;
+                background: #f5f5f5; /* fondo gris claro del display */
+                border-radius: 15px;
+            }
+
+            /* GRID */
+            .calculator__keys {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+
+            /* BUTTON BASE */
+            .calculator__button {
+                aspect-ratio: 1/1;
+                border: none;
+                border-radius: 50%;
+                font-size: 1.6rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.15s;
+            }
+
+            /* BUTTON COLORS */
+            .calculator__button--light {
+                background: #d9d9d9;
+                color: #000000;
+            }
+
+            .calculator__button--dark {
+                background: #666666;
+                color: #ffffff;
+            }
+
+            .calculator__button--operator {
+                background: #ff9500;
+                color: #ffffff;
+                font-weight: 600;
+            }
+
+            /* ZERO BUTTON */
+            .calculator__button--zero {
+                grid-column: span 2;
+                border-radius: 40px;
+                aspect-ratio: 2/1;
+                justify-content: flex-start;
+                padding-left: 28px;
+            }
+
+            /* HOVER EFFECT */
+            .calculator__button:hover {
+                filter: brightness(1.1);
+            }
+        </style>
+    </head>
+
+    <body class="page">
+        <div class="calculator">
+            <div class="calculator__display">0</div>
+
+            <div class="calculator__keys">
+                <button class="calculator__button calculator__button--light">AC</button>
+                <button class="calculator__button calculator__button--light">±</button>
+                <button class="calculator__button calculator__button--light">%</button>
+                <button class="calculator__button calculator__button--operator">÷</button>
+
+                <button class="calculator__button calculator__button--dark">7</button>
+                <button class="calculator__button calculator__button--dark">8</button>
+                <button class="calculator__button calculator__button--dark">9</button>
+                <button class="calculator__button calculator__button--operator">×</button>
+
+                <button class="calculator__button calculator__button--dark">4</button>
+                <button class="calculator__button calculator__button--dark">5</button>
+                <button class="calculator__button calculator__button--dark">6</button>
+                <button class="calculator__button calculator__button--operator">−</button>
+
+                <button class="calculator__button calculator__button--dark">1</button>
+                <button class="calculator__button calculator__button--dark">2</button>
+                <button class="calculator__button calculator__button--dark">3</button>
+                <button class="calculator__button calculator__button--operator">+</button>
+
+                <button class="calculator__button calculator__button--dark calculator__button--zero">0</button>
+                <button class="calculator__button calculator__button--dark">.</button>
+                <button class="calculator__button calculator__button--operator">=</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        const display = document.querySelector(".calculator__display");
+        const buttons = document.querySelectorAll(".calculator__button");
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                console.log(button.textContent);
+                if (button.textContent === "AC") {
+                    display.textContent = "0";
+                } else {
+                    if (display.textContent === "0") {
+                        display.textContent = button.textContent;
+                    } else {
+                        display.textContent += button.textContent;
+                    }
+                }
+            });
+        });
+    </script>
+</html>
